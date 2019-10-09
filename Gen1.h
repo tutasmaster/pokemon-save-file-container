@@ -66,8 +66,9 @@ namespace Gen1
 	public:
 		struct PlayerData
 		{
-			char raw_name[12];
-			char name[12];
+			char raw_name[12] = "";
+			char name[12] = "";
+			int  money = 0;
 		}player_data;
 
 		void ProcessData();

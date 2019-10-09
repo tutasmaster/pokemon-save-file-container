@@ -6,6 +6,16 @@ void Gen1::SaveFile::ProcessData()
 	for (auto i = 0; i < 0xB; i++)
 		player_data.raw_name[i] = data[0x2598 + i];
 	ConvertName();
+
+	for (auto i = 0; i < 0x3; i++)
+	{
+		for(auto j = 0; j < 0x2; j++)
+		{
+			char cur = (data[0x25F3 + i] >> (4 * j)) & 0b1111;
+			int val = (cur) * ((pow(100, i)) * pow(10, i));
+			player_data.money += val;
+		}
+	}
 }
 
 void Gen1::SaveFile::ConvertName()

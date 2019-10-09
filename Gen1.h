@@ -69,10 +69,12 @@ namespace Gen1
 			char raw_name[12] = "";
 			char name[12] = "";
 			int  money = 0;
+			char raw_rival_name[12] = "";
+			char rival_name[12] = "";
 		}player_data;
 
 		void ProcessData();
-		void ConvertName();
+		void ConvertName(char* name, char* result);
 		
 	private:
 		std::vector<char> data;

@@ -5,7 +5,12 @@ void Gen1::SaveFile::ProcessData()
 	//PLAYER_NAME LOADING
 	for (auto i = 0; i < 0xB; i++)
 		player_data.raw_name[i] = data[0x2598 + i];
-	ConvertName();
+	ConvertName(player_data.raw_name,player_data.name);
+
+	//PLAYER_NAME LOADING
+	for (auto i = 0; i < 0xB; i++)
+		player_data.raw_rival_name[i] = data[0x25F6 + i];
+	ConvertName(player_data.raw_rival_name, player_data.rival_name);
 
 	for (auto i = 0; i < 0x3; i++)
 	{
@@ -18,13 +23,13 @@ void Gen1::SaveFile::ProcessData()
 	}
 }
 
-void Gen1::SaveFile::ConvertName()
+void Gen1::SaveFile::ConvertName(char* name, char* result)
 {
 	for(auto i = 0; i < 0xB; i++)
 	{
-		auto v = player_data.raw_name[i];
+		auto v = name[i];
 		if (IsCharacterValid(v))
-			player_data.name[i] = character_map[(unsigned char)v];
+			result[i] = character_map[(unsigned char)v];
 	}
 }
 

@@ -6,6 +6,7 @@ int main()
 	Gen1::SaveFileReader::ReadToFile(sf,"Pokemon Blue.sav");
 
 	std::cout << "Player Name: " << sf.player_data.name << "\n";
+	std::cout << "Rival Name: " << sf.player_data.rival_name << "\n";
 	std::cout << "Money: " << sf.player_data.money << "€\n";
 	return 0;
 }

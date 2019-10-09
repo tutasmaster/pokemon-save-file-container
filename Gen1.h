@@ -61,6 +61,46 @@ namespace Gen1
 	0xF6,0xF7,0xF8,0xF9,0xFA,0xFB,0xFC,0xFD,0xFE,0xFF,0x50
 	};
 
+	struct Pokemon
+	{
+		enum Type
+		{
+			Normal,
+			Fight,
+			Flying,
+			Poison,
+			Ground,
+			Rock,
+			Bug,
+			Ghost,
+			Fire,
+			Water,
+			Grass,
+			Electric,
+			Psychic,
+			Ice,
+			Dragon
+		};
+		
+		uint8_t id = 0x0;
+		uint16_t hp = 0x0;
+		uint8_t level = 0x0;
+		uint8_t status_condition = 0x0;
+		Type type1, type2;
+		uint8_t catch_rate;
+		uint8_t held_item;
+		uint8_t move1, move2, move3, move4;
+		uint16_t trainer_id;
+		uint32_t exp_points;
+		struct EVs
+		{
+			uint16_t hp, atk, def, spd, spc, iv;
+		}evs;
+		uint8_t move1_pp, move2_pp, move3_pp, move4_pp;
+		//uint8_t level; REPEATED VALUE
+		uint16_t max_hp, atk, def, spd, spc;
+	};
+	
 	class SaveFile
 	{
 	public:

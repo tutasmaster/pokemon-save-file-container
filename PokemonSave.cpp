@@ -5,6 +5,6 @@ int main()
 	Gen1::SaveFile sf;
 	Gen1::SaveFileReader::ReadToFile(sf,"Pokemon Blue.sav");
 
-	std::cout << "Player Name: " << sf.player_data.name << "!\n";
+	std::cout << "Player Name: " << sf.player_data.name << "!";
 	return 0;
 }

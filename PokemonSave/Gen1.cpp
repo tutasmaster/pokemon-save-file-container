@@ -29,36 +29,35 @@ void Gen1::SaveFile::ProcessData()
 	for(auto i = 0; i < party_size; i++)
 	{
 		int offset = (0x2C * i);
-		party_data[i].id =				data[Address::party_pokemon + offset + 0];
-		party_data[i].hp =				(data[Address::party_pokemon + offset + 1] << 8) | data[Address::party_pokemon + (0x2C * i) + 2];
-		party_data[i].level =			data[Address::party_pokemon + offset + 3];
-		party_data[i].status_condition = data[Address::party_pokemon + offset + 4];
-		party_data[i].type1 =			(RAW_Pokemon::Type)data[Address::party_pokemon + offset + 5];
-		party_data[i].type2 =			(RAW_Pokemon::Type)data[Address::party_pokemon + offset + 6];
-		party_data[i].catch_rate =		data[Address::party_pokemon + offset + 7];
-		party_data[i].move1 =			data[Address::party_pokemon + offset + 8];
-		party_data[i].move2 =			data[Address::party_pokemon + offset + 9];
-		party_data[i].move3 =			data[Address::party_pokemon + offset + 10];
-		party_data[i].move4 =			data[Address::party_pokemon + offset + 11];
-		party_data[i].trainer_id =		0x0; //TODO ADD THE CORRECT VALUE
-		party_data[i].exp_points =		data[Address::party_pokemon + offset + 16]; //TODO FIX/ADD MORE BYTES (3 BYTES TOTAL)
-		party_data[i].evs.hp =			(data[Address::party_pokemon + offset + 17] << 8) | data[Address::party_pokemon + offset + 18];
-		party_data[i].evs.atk =			(data[Address::party_pokemon + offset + 19] << 8) | data[Address::party_pokemon + offset + 20];
-		party_data[i].evs.def =			(data[Address::party_pokemon + offset + 21] << 8) | data[Address::party_pokemon + offset + 22];
-		party_data[i].evs.spd =			(data[Address::party_pokemon + offset + 23] << 8) | data[Address::party_pokemon + offset + 24];
-		party_data[i].evs.spc =			(data[Address::party_pokemon + offset + 25] << 8) | data[Address::party_pokemon + offset + 26];
-		party_data[i].evs.iv;			//TODO ADD THE CORRECT VALUE (2 BYTES)
-		party_data[i].move1_pp =		data[Address::party_pokemon + offset + 29];
-		party_data[i].move2_pp =		data[Address::party_pokemon + offset + 30];
-		party_data[i].move3_pp =		data[Address::party_pokemon + offset + 31];
-		party_data[i].move4_pp =		data[Address::party_pokemon + offset + 32];
-		party_data[i].level =			data[Address::party_pokemon + offset + 33];
-		party_data[i].hp =				(data[Address::party_pokemon + offset + 34] << 8) | data[Address::party_pokemon + offset + 35];
-		party_data[i].atk =				(data[Address::party_pokemon + offset + 36] << 8) | data[Address::party_pokemon + offset + 37];
-		party_data[i].def =				(data[Address::party_pokemon + offset + 38] << 8) | data[Address::party_pokemon + offset + 39];
-		party_data[i].spd =				(data[Address::party_pokemon + offset + 40] << 8) | data[Address::party_pokemon + offset + 41];
-		party_data[i].spc =				(data[Address::party_pokemon + offset + 42] << 8) | data[Address::party_pokemon + offset + 43];
-		
+		party_data[i].id =					data[Address::party_pokemon + offset + 0];
+		party_data[i].hp =					(data[Address::party_pokemon + offset + 1] << 8) | data[Address::party_pokemon + (0x2C * i) + 2];
+		party_data[i].level =				data[Address::party_pokemon + offset + 3];
+		party_data[i].status_condition =	data[Address::party_pokemon + offset + 4];
+		party_data[i].type1 =				(RAW_Pokemon::Type)data[Address::party_pokemon + offset + 5];
+		party_data[i].type2 =				(RAW_Pokemon::Type)data[Address::party_pokemon + offset + 6];
+		party_data[i].catch_rate =			data[Address::party_pokemon + offset + 7];
+		party_data[i].move1 =				data[Address::party_pokemon + offset + 8];
+		party_data[i].move2 =				data[Address::party_pokemon + offset + 9];
+		party_data[i].move3 =				data[Address::party_pokemon + offset + 10];
+		party_data[i].move4 =				data[Address::party_pokemon + offset + 11];
+		party_data[i].trainer_id =			0x0; //TODO ADD THE CORRECT VALUE
+		party_data[i].exp_points =			data[Address::party_pokemon + offset + 16]; //TODO FIX/ADD MORE BYTES (3 BYTES TOTAL)
+		party_data[i].evs.hp =				(data[Address::party_pokemon + offset + 17] << 8) | data[Address::party_pokemon + offset + 18];
+		party_data[i].evs.atk =				(data[Address::party_pokemon + offset + 19] << 8) | data[Address::party_pokemon + offset + 20];
+		party_data[i].evs.def =				(data[Address::party_pokemon + offset + 21] << 8) | data[Address::party_pokemon + offset + 22];
+		party_data[i].evs.spd =				(data[Address::party_pokemon + offset + 23] << 8) | data[Address::party_pokemon + offset + 24];
+		party_data[i].evs.spc =				(data[Address::party_pokemon + offset + 25] << 8) | data[Address::party_pokemon + offset + 26];
+		party_data[i].evs.iv;				//TODO ADD THE CORRECT VALUE (2 BYTES)
+		party_data[i].move1_pp =			data[Address::party_pokemon + offset + 29];
+		party_data[i].move2_pp =			data[Address::party_pokemon + offset + 30];
+		party_data[i].move3_pp =			data[Address::party_pokemon + offset + 31];
+		party_data[i].move4_pp =			data[Address::party_pokemon + offset + 32];
+		party_data[i].level =				data[Address::party_pokemon + offset + 33];
+		party_data[i].hp =					(data[Address::party_pokemon + offset + 34] << 8) | data[Address::party_pokemon + offset + 35];
+		party_data[i].atk =					(data[Address::party_pokemon + offset + 36] << 8) | data[Address::party_pokemon + offset + 37];
+		party_data[i].def =					(data[Address::party_pokemon + offset + 38] << 8) | data[Address::party_pokemon + offset + 39];
+		party_data[i].spd =					(data[Address::party_pokemon + offset + 40] << 8) | data[Address::party_pokemon + offset + 41];
+		party_data[i].spc =					(data[Address::party_pokemon + offset + 42] << 8) | data[Address::party_pokemon + offset + 43];
 	}
 	
 }

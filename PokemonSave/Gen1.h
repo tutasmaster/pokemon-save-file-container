@@ -65,27 +65,29 @@ namespace Gen1
 		static const int player_name = 0x2598;
 		static const int rival_name = 0x25F6;
 		static const int money = 0x25F3;
+		static const int party_data = 0x2F2C;
+		static const int party_pokemon = party_data + 0x8;
 	};
 	
-	struct Pokemon
+	struct RAW_Pokemon
 	{
-		enum Type
+		enum Type : uint8_t
 		{
-			Normal,
-			Fight,
-			Flying,
-			Poison,
-			Ground,
-			Rock,
-			Bug,
-			Ghost,
-			Fire,
-			Water,
-			Grass,
-			Electric,
-			Psychic,
-			Ice,
-			Dragon
+			Normal		= 0x0,
+			Fight		= 0x1,
+			Flying		= 0x2,
+			Poison		= 0x3,
+			Ground		= 0x4,
+			Rock		= 0x5,
+			Bug			= 0x7,
+			Ghost		= 0x8,
+			Fire		= 0x14,
+			Water		= 0x15,
+			Grass		= 0x16,
+			Electric	= 0x17,
+			Psychic		= 0x18,
+			Ice			= 0x19,
+			Dragon		= 0x1A
 		};
 		
 		uint8_t id = 0x0;
@@ -97,7 +99,7 @@ namespace Gen1
 		uint8_t held_item;
 		uint8_t move1, move2, move3, move4;
 		uint16_t trainer_id;
-		uint32_t exp_points;
+		int32_t exp_points = 0x0;
 		struct EVs
 		{
 			uint16_t hp, atk, def, spd, spc, iv;
@@ -118,6 +120,9 @@ namespace Gen1
 			char raw_rival_name[12] = "";
 			char rival_name[12] = "";
 		}player_data;
+
+		std::array<RAW_Pokemon, 6> party_data;
+		uint8_t party_size = 0;
 
 		void ProcessData();
 		static void ConvertName(char* name, char* result);

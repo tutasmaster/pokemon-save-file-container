@@ -6,6 +6,8 @@
 #include <vector>
 #include <string>
 
+
+
 namespace Gen1
 {
 	/* CHARACTER_CODES
@@ -108,6 +110,8 @@ namespace Gen1
 		//uint8_t level; REPEATED VALUE
 		uint16_t max_hp = 0x0, atk = 0x0, def = 0x0, spd = 0x0, spc = 0x0;
 	};
+
+	const std::array<Pokemon, 0x100> Pokemon_List;
 	
 	class SaveFile
 	{

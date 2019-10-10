@@ -61,6 +61,12 @@ namespace Gen1
 	0xF6,0xF7,0xF8,0xF9,0xFA,0xFB,0xFC,0xFD,0xFE,0xFF,0x50
 	};
 
+	struct Address{
+		static const int player_name = 0x2598;
+		static const int rival_name = 0x25F6;
+		static const int money = 0x25F3;
+	};
+	
 	struct Pokemon
 	{
 		enum Type
@@ -114,7 +120,7 @@ namespace Gen1
 		}player_data;
 
 		void ProcessData();
-		void ConvertName(char* name, char* result);
+		static void ConvertName(char* name, char* result);
 		
 	private:
 		std::vector<char> data;

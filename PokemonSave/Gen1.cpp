@@ -4,20 +4,21 @@ void Gen1::SaveFile::ProcessData()
 {
 	//PLAYER_NAME LOADING
 	for (auto i = 0; i < 0xB; i++)
-		player_data.raw_name[i] = data[0x2598 + i];
+		player_data.raw_name[i] = data[Address::player_name + i];
 	ConvertName(player_data.raw_name,player_data.name);
 
 	//PLAYER_NAME LOADING
 	for (auto i = 0; i < 0xB; i++)
-		player_data.raw_rival_name[i] = data[0x25F6 + i];
+		player_data.raw_rival_name[i] = data[Address::rival_name + i];
 	ConvertName(player_data.raw_rival_name, player_data.rival_name);
 
 	for (auto i = 0; i < 0x3; i++)
 	{
 		for(auto j = 0; j < 0x2; j++)
 		{
-			char cur = (data[0x25F3 + i] >> (4 * j)) & 0b1111;
-			int val = (cur) * ((pow(100, i)) * pow(10, i));
+			//BROKEN_CURRENTLY
+			char cur = (data[Address::money + i] >> (4 * j)) & 0b1111;
+			int val = (cur) * ((pow(100, i)) * pow(10, i + (j * 2)));
 			player_data.money += val;
 		}
 	}

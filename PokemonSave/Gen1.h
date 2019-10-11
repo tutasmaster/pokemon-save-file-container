@@ -97,7 +97,8 @@ namespace Gen1
 		uint16_t hp = 0x0;
 		uint8_t level = 0x0;
 		uint8_t status_condition = 0x0;
-		Type type1 = Type::Normal, type2 = Type::Normal;
+		Type type1 = Type::Normal;
+		Type type2 = Type::Normal;
 		uint8_t catch_rate = 0x0;
 		uint8_t held_item = 0x0;
 		uint8_t move1 = 0x0, move2 = 0x0, move3 = 0x0, move4 = 0x0;

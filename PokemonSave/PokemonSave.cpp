@@ -15,11 +15,8 @@ int main()
 	for(auto i = 0; i < sf.party_size; i++){
 		std::cout << "\t\tID: " << std::hex << (int)sf.party_data[i].id << "\n";
 		std::cout << "\t\tNAME: " << Gen1::Pokemon_List[sf.party_data[i].id].Name << "\n";
-		std::cout << "\t\tCUR HP: " << std::dec << (int)sf.party_data[i].hp << "\n";
-		std::cout << "\t\tLEVEL: " << std::dec << (int)sf.party_data[i].level << "\n";
-		std::cout << "\t\tSTATUS CONDITION: " << std::hex << (int)sf.party_data[i].status_condition << "\n";
-		std::cout << "\t\tTYPE 1: " << std::hex << (int)sf.party_data[i].type1 << "\n";
-		std::cout << "\t\tTYPE 2: " << std::hex << (int)sf.party_data[i].type2 << "\n";
+		std::cout << "\t\tTYPE 1: " << std::hex << Gen1::Pokemon_List[sf.party_data[i].id].type1 << "\n";
+		std::cout << "\t\tTYPE 2: " << std::hex << Gen1::Pokemon_List[sf.party_data[i].id].type2 << "\n";
 		std::cout << "\n";
 	}
 	

@@ -5,7 +5,7 @@
 #include <array>
 #include <vector>
 #include <string>
-#include "Gen1Pokemon.h"
+#include "Gen1Moves.h"
 
 
 

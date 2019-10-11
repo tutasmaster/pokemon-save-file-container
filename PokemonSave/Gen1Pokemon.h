@@ -25,8 +25,8 @@ namespace Gen1
 			Ice,
 			Dragon
 		};
-		std::string Name = "MissingNo";
-		uint32_t National_Dex = 0;
+		std::string name = "MissingNo";
+		uint32_t national_dex = 0;
 		uint8_t hp = 0, atk = 0, def = 0, spd = 0, spc = 0;
 		Type type1; Type type2;
 	};

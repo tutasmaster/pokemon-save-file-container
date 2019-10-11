@@ -29,6 +29,7 @@ void Gen1::SaveFile::ProcessData()
 	for(auto i = 0; i < party_size; i++)
 	{
 		int offset = (0x2C * i);
+		int nick_offset = 0xB * i;
 		party_data[i].id =					data[Address::party_pokemon + offset + 0];
 		party_data[i].hp =					(data[Address::party_pokemon + offset + 1] << 8) | data[Address::party_pokemon + (0x2C * i) + 2];
 		party_data[i].level =				data[Address::party_pokemon + offset + 3];
@@ -58,6 +59,16 @@ void Gen1::SaveFile::ProcessData()
 		party_data[i].def =					(data[Address::party_pokemon + offset + 38] << 8) | data[Address::party_pokemon + offset + 39];
 		party_data[i].spd =					(data[Address::party_pokemon + offset + 40] << 8) | data[Address::party_pokemon + offset + 41];
 		party_data[i].spc =					(data[Address::party_pokemon + offset + 42] << 8) | data[Address::party_pokemon + offset + 43];
+
+		//GET POKEMON NICK
+		for(auto j = 0; j < 0xB; j++)
+			party_data[i].raw_name[j] = data[Address::party_names + nick_offset + j];
+		ConvertName(party_data[i].raw_name, party_data[i].name);
+
+		//GET OT
+		for (auto j = 0; j < 0xB; j++)
+			party_data[i].raw_trainer_name[j] = data[Address::party_trainers + nick_offset + j];
+		ConvertName(party_data[i].raw_trainer_name, party_data[i].trainer_name);
 	}
 	
 }

@@ -17,9 +17,10 @@ void Gen1::SaveFile::ProcessData()
 	{
 		for(auto j = 0; j < 0x2; j++)
 		{
-			//BROKEN_CURRENTLY
-			char cur = (data[Address::money + i] >> (4 * j)) & 0b1111;
-			int val = (cur) * ((pow(100, i)) * pow(10, i + (j * 2)));
+			//PATCHING
+			
+			char cur = (data[Address::money + (0x2 - i)] >> (4 * j)) & 0b1111;
+			int val = (cur) * pow(10, j + (i * 2));
 			player_data.money += val;
 		}
 	}

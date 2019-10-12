@@ -3,12 +3,12 @@
 int main()
 {
 	Gen1::SaveFile sf;
-	Gen1::SaveFileReader::ReadToFile(sf,"Pokemon Blue.sav");
+	Gen1::SaveFileReader::ReadToFile(sf,"Pokemon Yellow.sav");
 
 	std::cout << "PLAYER_DATA:\n";
 	std::cout << "\tPlayer Name: " << sf.player_data.name << "\n";
 	std::cout << "\tRival Name: " << sf.player_data.rival_name << "\n";
-	std::cout << "\tMoney: " << sf.player_data.money << "€\n\n";
+	std::cout << "\tMoney: " << sf.player_data.money << "$\n\n";
 
 	std::cout << "PARTY_DATA:\n";
 	std::cout << "\tCurrent Pokemon: " << (int)sf.party_size << "\n";

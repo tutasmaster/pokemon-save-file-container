@@ -22,7 +22,7 @@ int main()
 		std::cout << "\tTYPE 2: " << std::hex << Gen1::Pokemon_List[sf.party_data[i].id].type2 << "\n";
 		std::cout << "\n";
 	}
-	std::cout << "\BAG_DATA:\n";
+	std::cout << "\tBAG_DATA:\n";
 	std::cout << "\tCurrent Items: " << (int)sf.bag_size << "\n\n";
 	for(auto i = 0; i < sf.bag_size; i++)
 	{

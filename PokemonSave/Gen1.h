@@ -74,6 +74,7 @@ namespace Gen1
 		static const int party_trainers = 0x303C;
 		static const int party_names = 0x307E;
 		static const int bag_items = 0x25C9;
+		static const int box_items = 0x27E6;
 	};
 	
 	struct RAW_Pokemon
@@ -154,6 +155,12 @@ namespace Gen1
 			char raw_rival_name[12] = "";
 			char rival_name[12] = "";
 		}player_data;
+
+		struct Item_Box
+		{
+			std::array<RAW_Item, 50> data;
+			uint8_t size = 0;
+		}item_box;
 
 		std::array<RAW_Pokemon, 6> party_data;
 		uint8_t party_size = 0;
@@ -253,6 +260,13 @@ namespace Gen1
 				int offset = (0x2 * i) + 1;
 				bag_data[i].id = data[Address::bag_items + offset];
 				bag_data[i].quantity = data[Address::bag_items + offset + 1];
+			}
+			item_box.size = data[Address::box_items];
+			for(int i = 0; i < item_box.size; i++)
+			{
+				int offset = (0x2 * i) + 1;
+				item_box.data[i].id = data[Address::box_items + offset];
+				item_box.data[i].quantity = data[Address::box_items + offset + 1];
 			}
 		}
 		static void ConvertName(char* name, char* result)

@@ -73,6 +73,7 @@ namespace Gen1
 		static const int party_pokemon = party_data + 0x8;
 		static const int party_trainers = 0x303C;
 		static const int party_names = 0x307E;
+		static const int bag_items = 0x25C9;
 	};
 	
 	struct RAW_Pokemon
@@ -126,6 +127,12 @@ namespace Gen1
 		char trainer_name[12] = "";
 	};
 
+	struct RAW_Item
+	{
+		uint8_t id = 0;
+		uint8_t quantity = 0;
+	};
+
 	inline bool IsCharacterValid(char c)
 	{
 		for (auto i = 0; i < 0x4F; i++)
@@ -150,6 +157,9 @@ namespace Gen1
 
 		std::array<RAW_Pokemon, 6> party_data;
 		uint8_t party_size = 0;
+
+		std::array<RAW_Item, 20> bag_data;
+		uint8_t bag_size = 0;
 
 		void ProcessData()
 		{
@@ -234,6 +244,15 @@ namespace Gen1
 				for (auto j = 0; j < 0xB; j++)
 					party_data[i].raw_trainer_name[j] = data[Address::party_trainers + nick_offset + j];
 				ConvertName(party_data[i].raw_trainer_name, party_data[i].trainer_name);
+			}
+
+			//BAG LOADING
+			bag_size = data[Address::bag_items];
+			for(int i = 0; i < bag_size; i++)
+			{
+				int offset = (0x2 * i) + 1;
+				bag_data[i].id = data[Address::bag_items + offset];
+				bag_data[i].quantity = data[Address::bag_items + offset + 1];
 			}
 		}
 		static void ConvertName(char* name, char* result)

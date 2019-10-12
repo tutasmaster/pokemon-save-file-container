@@ -11,15 +11,23 @@ int main()
 	std::cout << "\tMoney: " << sf.player_data.money << "$\n\n";
 
 	std::cout << "PARTY_DATA:\n";
-	std::cout << "\tCurrent Pokemon: " << (int)sf.party_size << "\n";
-	for(auto i = 0; i < sf.party_size; i++){
-		std::cout << "\t\tID: " << std::hex << (int)sf.party_data[i].id << "\n";
-		std::cout << "\t\tNAME: " << Gen1::Pokemon_List[sf.party_data[i].id].name << "\n";
-		std::cout << "\t\tNICK: " << sf.party_data[i].name << "\n";
-		std::cout << "\t\tOT: " << sf.party_data[i].trainer_name << "\n";
-		std::cout << "\t\tTYPE 1: " << std::hex << Gen1::Pokemon_List[sf.party_data[i].id].type1 << "\n";
-		std::cout << "\t\tTYPE 2: " << std::hex << Gen1::Pokemon_List[sf.party_data[i].id].type2 << "\n";
+	std::cout << "\tCurrent Pokemon: " << (int)sf.party_size << "\n\n";
+	for(auto i = 0; i < sf.party_size; i++)
+	{
+		std::cout << "\tID: " << std::hex << (int)sf.party_data[i].id << "\n";
+		std::cout << "\tNAME: " << Gen1::Pokemon_List[sf.party_data[i].id].name << "\n";
+		std::cout << "\tNICK: " << sf.party_data[i].name << "\n";
+		std::cout << "\tOT: " << sf.party_data[i].trainer_name << "\n";
+		std::cout << "\tTYPE 1: " << std::hex << Gen1::Pokemon_List[sf.party_data[i].id].type1 << "\n";
+		std::cout << "\tTYPE 2: " << std::hex << Gen1::Pokemon_List[sf.party_data[i].id].type2 << "\n";
 		std::cout << "\n";
+	}
+	std::cout << "\BAG_DATA:\n";
+	std::cout << "\tCurrent Items: " << (int)sf.bag_size << "\n\n";
+	for(auto i = 0; i < sf.bag_size; i++)
+	{
+		std::cout << "\tName: " << Gen1::Item_List[sf.bag_data[i].id].name << "\n";
+		std::cout << "\tQuantity: " << (int)sf.bag_data[i].quantity << "\n\n";
 	}
 	Gen1::ShowdownGenerator sg(sf);
 	return 0;

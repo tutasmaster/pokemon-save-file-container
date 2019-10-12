@@ -29,6 +29,14 @@ int main()
 		std::cout << "\tName: " << Gen1::Item_List[sf.bag_data[i].id].name << "\n";
 		std::cout << "\tQuantity: " << (int)sf.bag_data[i].quantity << "\n\n";
 	}
+
+	std::cout << "BOX_DATA:\n";
+	for(auto i = 0; i < 12; i++)
+	{
+		std::cout << "\tBOX " << std::dec << (int)i << "\n";
+		for(auto j = 0; j < sf.box_data[i].size; j++)
+			std::cout << "\t\tNAME: " << Gen1::Pokemon_List[sf.box_data[i].data[j].id].name << "\n";
+	}
 	Gen1::ShowdownGenerator sg(sf);
 	return 0;
 }

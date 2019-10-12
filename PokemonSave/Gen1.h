@@ -75,6 +75,10 @@ namespace Gen1
 		static const int party_names = 0x307E;
 		static const int bag_items = 0x25C9;
 		static const int box_items = 0x27E6;
+		static const int pokemon_box_1 = 0x4000;
+		static const int pokemon_box_7 = 0x6000;
+		static const int current_box = 0x284C;
+		static const int current_box_data = 0x30C0;
 	};
 	
 	struct RAW_Pokemon
@@ -162,11 +166,20 @@ namespace Gen1
 			uint8_t size = 0;
 		}item_box;
 
+		struct Pokemon_Box
+		{
+			uint8_t size = 0;
+			std::array<RAW_Pokemon, 20> data;
+		};
+
 		std::array<RAW_Pokemon, 6> party_data;
 		uint8_t party_size = 0;
 
 		std::array<RAW_Item, 20> bag_data;
 		uint8_t bag_size = 0;
+
+		std::array<Pokemon_Box, 12> box_data;
+		uint8_t current_box = 0;
 
 		void ProcessData()
 		{
@@ -261,12 +274,162 @@ namespace Gen1
 				bag_data[i].id = data[Address::bag_items + offset];
 				bag_data[i].quantity = data[Address::bag_items + offset + 1];
 			}
+			//ITEM BOX LOADING
 			item_box.size = data[Address::box_items];
 			for(int i = 0; i < item_box.size; i++)
 			{
 				int offset = (0x2 * i) + 1;
 				item_box.data[i].id = data[Address::box_items + offset];
 				item_box.data[i].quantity = data[Address::box_items + offset + 1];
+			}
+
+			//LOADING POKEMON BOXES FROM BANK 2
+			for(int i = 0; i < 6; i++)
+			{
+				int offset = 0x462 * i;
+				int pokemon_offset = offset + 0x16;
+
+				box_data[i].size = data[Address::pokemon_box_1 + offset] > 20 ? 0 : data[Address::pokemon_box_1 + offset];
+				for(int j = 0; j < box_data[i].size; j++)
+				{
+					int pk_offset = (0x21 * j) + pokemon_offset + Address::pokemon_box_1;
+					int nick_offset = 0xB * j;
+					box_data[i].data[j].id = data[ pk_offset + 0];
+					box_data[i].data[j].hp = (data[ pk_offset + 1] << 8) | data[ (0x2C * i) + 2];
+					box_data[i].data[j].level = data[ pk_offset + 3];
+					box_data[i].data[j].status_condition = data[ pk_offset + 4];
+					box_data[i].data[j].type1 = (RAW_Pokemon::Type)data[ pk_offset + 5];
+					box_data[i].data[j].type2 = (RAW_Pokemon::Type)data[ pk_offset + 6];
+					box_data[i].data[j].catch_rate = data[ pk_offset + 7];
+					box_data[i].data[j].move1 = data[ pk_offset + 8];
+					box_data[i].data[j].move2 = data[ pk_offset + 9];
+					box_data[i].data[j].move3 = data[ pk_offset + 10];
+					box_data[i].data[j].move4 = data[ pk_offset + 11];
+					box_data[i].data[j].trainer_id = 0x0; //TODO ADD THE CORRECT VALUE
+					box_data[i].data[j].exp_points = data[ pk_offset + 16]; //TODO FIX/ADD MORE BYTES (3 BYTES TOTAL)
+					box_data[i].data[j].evs.hp = (data[ pk_offset + 17] << 8) | data[ pk_offset + 18];
+					box_data[i].data[j].evs.atk = (data[ pk_offset + 19] << 8) | data[ pk_offset + 20];
+					box_data[i].data[j].evs.def = (data[ pk_offset + 21] << 8) | data[ pk_offset + 22];
+					box_data[i].data[j].evs.spd = (data[ pk_offset + 23] << 8) | data[ pk_offset + 24];
+					box_data[i].data[j].evs.spc = (data[ pk_offset + 25] << 8) | data[ pk_offset + 26];
+					box_data[i].data[j].evs.hp_val = data[ pk_offset + 17];
+					box_data[i].data[j].evs.atk_val = data[ pk_offset + 19];
+					box_data[i].data[j].evs.def_val = data[ pk_offset + 21];
+					box_data[i].data[j].evs.spd_val = data[ pk_offset + 23];
+					box_data[i].data[j].evs.spc_val = data[ pk_offset + 25];
+					box_data[i].data[j].ivs.iv = (data[ pk_offset + 28] << 8) | (data[ pk_offset + 27] & 0xFF); //Returning random values with some pokemon????
+					box_data[i].data[j].ivs.spd = (box_data[i].data[j].ivs.iv & 0xF000) >> 12;
+					box_data[i].data[j].ivs.spc = (box_data[i].data[j].ivs.iv & 0x0F00) >> 8;
+					box_data[i].data[j].ivs.atk = (box_data[i].data[j].ivs.iv & 0x00F0) >> 4;
+					box_data[i].data[j].ivs.def = (box_data[i].data[j].ivs.iv & 0x000F);
+					box_data[i].data[j].ivs.hp = ((box_data[i].data[j].ivs.atk & 1) << 3) |
+						((box_data[i].data[j].ivs.def & 1) << 2) |
+						((box_data[i].data[j].ivs.spd & 1) << 1) |
+						((box_data[i].data[j].ivs.spc & 1));
+					box_data[i].data[j].move1_pp = data[ pk_offset + 29];
+					box_data[i].data[j].move2_pp = data[ pk_offset + 30];
+					box_data[i].data[j].move3_pp = data[ pk_offset + 31];
+					box_data[i].data[j].move4_pp = data[ pk_offset + 32];
+				}
+			}
+
+			//LOADING POKEMON BOXES FROM BANK 3
+			for (int i = 7; i < 12; i++)
+			{
+				int offset = 0x462 * (i-7);
+				int pokemon_offset = offset + 0x16;
+
+				box_data[i].size = data[Address::pokemon_box_7 + offset] > 20 ? 0 : data[Address::pokemon_box_7 + offset];
+				for (int j = 0; j < box_data[i].size; j++)
+				{
+					int pk_offset = (0x21 * j) + pokemon_offset + Address::pokemon_box_7;
+					int nick_offset = 0xB * j;
+					box_data[i].data[j].id = data[pk_offset + 0];
+					box_data[i].data[j].hp = (data[pk_offset + 1] << 8) | data[(0x2C * i) + 2];
+					box_data[i].data[j].level = data[pk_offset + 3];
+					box_data[i].data[j].status_condition = data[pk_offset + 4];
+					box_data[i].data[j].type1 = (RAW_Pokemon::Type)data[pk_offset + 5];
+					box_data[i].data[j].type2 = (RAW_Pokemon::Type)data[pk_offset + 6];
+					box_data[i].data[j].catch_rate = data[pk_offset + 7];
+					box_data[i].data[j].move1 = data[pk_offset + 8];
+					box_data[i].data[j].move2 = data[pk_offset + 9];
+					box_data[i].data[j].move3 = data[pk_offset + 10];
+					box_data[i].data[j].move4 = data[pk_offset + 11];
+					box_data[i].data[j].trainer_id = 0x0; //TODO ADD THE CORRECT VALUE
+					box_data[i].data[j].exp_points = data[pk_offset + 16]; //TODO FIX/ADD MORE BYTES (3 BYTES TOTAL)
+					box_data[i].data[j].evs.hp = (data[pk_offset + 17] << 8) | data[pk_offset + 18];
+					box_data[i].data[j].evs.atk = (data[pk_offset + 19] << 8) | data[pk_offset + 20];
+					box_data[i].data[j].evs.def = (data[pk_offset + 21] << 8) | data[pk_offset + 22];
+					box_data[i].data[j].evs.spd = (data[pk_offset + 23] << 8) | data[pk_offset + 24];
+					box_data[i].data[j].evs.spc = (data[pk_offset + 25] << 8) | data[pk_offset + 26];
+					box_data[i].data[j].evs.hp_val = data[pk_offset + 17];
+					box_data[i].data[j].evs.atk_val = data[pk_offset + 19];
+					box_data[i].data[j].evs.def_val = data[pk_offset + 21];
+					box_data[i].data[j].evs.spd_val = data[pk_offset + 23];
+					box_data[i].data[j].evs.spc_val = data[pk_offset + 25];
+					box_data[i].data[j].ivs.iv = (data[pk_offset + 28] << 8) | (data[pk_offset + 27] & 0xFF); //Returning random values with some pokemon????
+					box_data[i].data[j].ivs.spd = (box_data[i].data[j].ivs.iv & 0xF000) >> 12;
+					box_data[i].data[j].ivs.spc = (box_data[i].data[j].ivs.iv & 0x0F00) >> 8;
+					box_data[i].data[j].ivs.atk = (box_data[i].data[j].ivs.iv & 0x00F0) >> 4;
+					box_data[i].data[j].ivs.def = (box_data[i].data[j].ivs.iv & 0x000F);
+					box_data[i].data[j].ivs.hp = ((box_data[i].data[j].ivs.atk & 1) << 3) |
+						((box_data[i].data[j].ivs.def & 1) << 2) |
+						((box_data[i].data[j].ivs.spd & 1) << 1) |
+						((box_data[i].data[j].ivs.spc & 1));
+					box_data[i].data[j].move1_pp = data[pk_offset + 29];
+					box_data[i].data[j].move2_pp = data[pk_offset + 30];
+					box_data[i].data[j].move3_pp = data[pk_offset + 31];
+					box_data[i].data[j].move4_pp = data[pk_offset + 32];
+				}
+			}
+
+			current_box = (unsigned) data[Address::current_box] & 0b01111111;
+			box_data[current_box].size = data[Address::current_box_data];
+			for(int i = 0; i < box_data[current_box].size; i++)
+			{
+				int offset = (0x21 * i) + 0x16;
+				box_data[current_box].data[i].id = data[Address::current_box_data + offset + 0];
+				box_data[current_box].data[i].hp = (data[Address::current_box_data + offset + 1] << 8) | data[Address::current_box_data + (0x2C * i) + 2];
+				box_data[current_box].data[i].level = data[Address::current_box_data + offset + 3];
+				box_data[current_box].data[i].status_condition = data[Address::current_box_data + offset + 4];
+				box_data[current_box].data[i].type1 = (RAW_Pokemon::Type)data[Address::current_box_data + offset + 5];
+				box_data[current_box].data[i].type2 = (RAW_Pokemon::Type)data[Address::current_box_data + offset + 6];
+				box_data[current_box].data[i].catch_rate = data[Address::current_box_data + offset + 7];
+				box_data[current_box].data[i].move1 = data[Address::current_box_data + offset + 8];
+				box_data[current_box].data[i].move2 = data[Address::current_box_data + offset + 9];
+				box_data[current_box].data[i].move3 = data[Address::current_box_data + offset + 10];
+				box_data[current_box].data[i].move4 = data[Address::current_box_data + offset + 11];
+				box_data[current_box].data[i].trainer_id = 0x0; //TODO ADD THE CORRECT VALUE
+				box_data[current_box].data[i].exp_points = data[Address::current_box_data + offset + 16]; //TODO FIX/ADD MORE BYTES (3 BYTES TOTAL)
+				box_data[current_box].data[i].evs.hp = (data[Address::current_box_data + offset + 17] << 8) | data[Address::current_box_data + offset + 18];
+				box_data[current_box].data[i].evs.atk = (data[Address::current_box_data + offset + 19] << 8) | data[Address::current_box_data + offset + 20];
+				box_data[current_box].data[i].evs.def = (data[Address::current_box_data + offset + 21] << 8) | data[Address::current_box_data + offset + 22];
+				box_data[current_box].data[i].evs.spd = (data[Address::current_box_data + offset + 23] << 8) | data[Address::current_box_data + offset + 24];
+				box_data[current_box].data[i].evs.spc = (data[Address::current_box_data + offset + 25] << 8) | data[Address::current_box_data + offset + 26];
+				box_data[current_box].data[i].evs.hp_val = data[Address::current_box_data + offset + 17];
+				box_data[current_box].data[i].evs.atk_val = data[Address::current_box_data + offset + 19];
+				box_data[current_box].data[i].evs.def_val = data[Address::current_box_data + offset + 21];
+				box_data[current_box].data[i].evs.spd_val = data[Address::current_box_data + offset + 23];
+				box_data[current_box].data[i].evs.spc_val = data[Address::current_box_data + offset + 25];
+				box_data[current_box].data[i].ivs.iv = (data[Address::current_box_data + offset + 28] << 8) | (data[Address::current_box_data + offset + 27] & 0xFF); //Returning random values with some pokemon????
+				box_data[current_box].data[i].ivs.spd = (box_data[current_box].data[i].ivs.iv & 0xF000) >> 12;
+				box_data[current_box].data[i].ivs.spc = (box_data[current_box].data[i].ivs.iv & 0x0F00) >> 8;
+				box_data[current_box].data[i].ivs.atk = (box_data[current_box].data[i].ivs.iv & 0x00F0) >> 4;
+				box_data[current_box].data[i].ivs.def = (box_data[current_box].data[i].ivs.iv & 0x000F);
+				box_data[current_box].data[i].ivs.hp = ((box_data[current_box].data[i].ivs.atk & 1) << 3) |
+					((box_data[current_box].data[i].ivs.def & 1) << 2) |
+					((box_data[current_box].data[i].ivs.spd & 1) << 1) |
+					((box_data[current_box].data[i].ivs.spc & 1));
+				box_data[current_box].data[i].move1_pp = data[Address::current_box_data + offset + 29];
+				box_data[current_box].data[i].move2_pp = data[Address::current_box_data + offset + 30];
+				box_data[current_box].data[i].move3_pp = data[Address::current_box_data + offset + 31];
+				box_data[current_box].data[i].move4_pp = data[Address::current_box_data + offset + 32];
+				box_data[current_box].data[i].level = data[Address::current_box_data + offset + 33];
+				box_data[current_box].data[i].hp = (data[Address::current_box_data + offset + 34] << 8) | data[Address::current_box_data + offset + 35];
+				box_data[current_box].data[i].atk = (data[Address::current_box_data + offset + 36] << 8) | data[Address::current_box_data + offset + 37];
+				box_data[current_box].data[i].def = (data[Address::current_box_data + offset + 38] << 8) | data[Address::current_box_data + offset + 39];
+				box_data[current_box].data[i].spd = (data[Address::current_box_data + offset + 40] << 8) | data[Address::current_box_data + offset + 41];
+				box_data[current_box].data[i].spc = (data[Address::current_box_data + offset + 42] << 8) | data[Address::current_box_data + offset + 43];
 			}
 		}
 		static void ConvertName(char* name, char* result)

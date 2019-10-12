@@ -48,6 +48,11 @@ void Gen1::SaveFile::ProcessData()
 		party_data[i].evs.def =				(data[Address::party_pokemon + offset + 21] << 8) | data[Address::party_pokemon + offset + 22];
 		party_data[i].evs.spd =				(data[Address::party_pokemon + offset + 23] << 8) | data[Address::party_pokemon + offset + 24];
 		party_data[i].evs.spc =				(data[Address::party_pokemon + offset + 25] << 8) | data[Address::party_pokemon + offset + 26];
+		party_data[i].evs.hp_val =			data[Address::party_pokemon + offset + 17];
+		party_data[i].evs.atk_val =			data[Address::party_pokemon + offset + 19];
+		party_data[i].evs.def_val =			data[Address::party_pokemon + offset + 21];
+		party_data[i].evs.spd_val =			data[Address::party_pokemon + offset + 23];
+		party_data[i].evs.spc_val =			data[Address::party_pokemon + offset + 25];
 		party_data[i].evs.iv;				//TODO ADD THE CORRECT VALUE (2 BYTES)
 		party_data[i].move1_pp =			data[Address::party_pokemon + offset + 29];
 		party_data[i].move2_pp =			data[Address::party_pokemon + offset + 30];

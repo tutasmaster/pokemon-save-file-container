@@ -109,6 +109,7 @@ namespace Gen1
 		struct EVs
 		{
 			uint16_t hp = 0x0, atk = 0x0, def = 0x0, spd = 0x0, spc = 0x0, iv = 0x0;
+			uint8_t hp_val = 0x0, atk_val = 0x0, def_val = 0x0, spd_val = 0x0, spc_val = 0x0, iv_val = 0x0;
 		}evs;
 		uint8_t move1_pp = 0x0, move2_pp = 0x0, move3_pp = 0x0, move4_pp = 0x0;
 		//uint8_t level; REPEATED VALUE

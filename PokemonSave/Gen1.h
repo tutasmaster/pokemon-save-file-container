@@ -212,58 +212,12 @@ namespace Gen1
 			{
 				int offset = (0x2C * i);
 				int nick_offset = 0xB * i;
-				party_data[i].id = data[Address::party_pokemon + offset + 0];
-				party_data[i].hp = (data[Address::party_pokemon + offset + 1] << 8) | data[Address::party_pokemon + (0x2C * i) + 2];
-				party_data[i].level = data[Address::party_pokemon + offset + 3];
-				party_data[i].status_condition = data[Address::party_pokemon + offset + 4];
-				party_data[i].type1 = (RAW_Pokemon::Type)data[Address::party_pokemon + offset + 5];
-				party_data[i].type2 = (RAW_Pokemon::Type)data[Address::party_pokemon + offset + 6];
-				party_data[i].catch_rate = data[Address::party_pokemon + offset + 7];
-				party_data[i].move1 = data[Address::party_pokemon + offset + 8];
-				party_data[i].move2 = data[Address::party_pokemon + offset + 9];
-				party_data[i].move3 = data[Address::party_pokemon + offset + 10];
-				party_data[i].move4 = data[Address::party_pokemon + offset + 11];
-				party_data[i].trainer_id = 0x0; //TODO ADD THE CORRECT VALUE
-				party_data[i].exp_points = data[Address::party_pokemon + offset + 16]; //TODO FIX/ADD MORE BYTES (3 BYTES TOTAL)
-				party_data[i].evs.hp = (data[Address::party_pokemon + offset + 17] << 8) | data[Address::party_pokemon + offset + 18];
-				party_data[i].evs.atk = (data[Address::party_pokemon + offset + 19] << 8) | data[Address::party_pokemon + offset + 20];
-				party_data[i].evs.def = (data[Address::party_pokemon + offset + 21] << 8) | data[Address::party_pokemon + offset + 22];
-				party_data[i].evs.spd = (data[Address::party_pokemon + offset + 23] << 8) | data[Address::party_pokemon + offset + 24];
-				party_data[i].evs.spc = (data[Address::party_pokemon + offset + 25] << 8) | data[Address::party_pokemon + offset + 26];
-				party_data[i].evs.hp_val = data[Address::party_pokemon + offset + 17];
-				party_data[i].evs.atk_val = data[Address::party_pokemon + offset + 19];
-				party_data[i].evs.def_val = data[Address::party_pokemon + offset + 21];
-				party_data[i].evs.spd_val = data[Address::party_pokemon + offset + 23];
-				party_data[i].evs.spc_val = data[Address::party_pokemon + offset + 25];
-				party_data[i].ivs.iv = (data[Address::party_pokemon + offset + 28] << 8) | (data[Address::party_pokemon + offset + 27] & 0xFF); //Returning random values with some pokemon????
-				party_data[i].ivs.spd = (party_data[i].ivs.iv & 0xF000) >> 12;
-				party_data[i].ivs.spc = (party_data[i].ivs.iv & 0x0F00) >> 8;
-				party_data[i].ivs.atk = (party_data[i].ivs.iv & 0x00F0) >> 4;
-				party_data[i].ivs.def = (party_data[i].ivs.iv & 0x000F);
-				party_data[i].ivs.hp = ((party_data[i].ivs.atk & 1) << 3) |
-					((party_data[i].ivs.def & 1) << 2) |
-					((party_data[i].ivs.spd & 1) << 1) |
-					((party_data[i].ivs.spc & 1));
-				party_data[i].move1_pp = data[Address::party_pokemon + offset + 29];
-				party_data[i].move2_pp = data[Address::party_pokemon + offset + 30];
-				party_data[i].move3_pp = data[Address::party_pokemon + offset + 31];
-				party_data[i].move4_pp = data[Address::party_pokemon + offset + 32];
-				party_data[i].level = data[Address::party_pokemon + offset + 33];
-				party_data[i].hp = (data[Address::party_pokemon + offset + 34] << 8) | data[Address::party_pokemon + offset + 35];
-				party_data[i].atk = (data[Address::party_pokemon + offset + 36] << 8) | data[Address::party_pokemon + offset + 37];
-				party_data[i].def = (data[Address::party_pokemon + offset + 38] << 8) | data[Address::party_pokemon + offset + 39];
-				party_data[i].spd = (data[Address::party_pokemon + offset + 40] << 8) | data[Address::party_pokemon + offset + 41];
-				party_data[i].spc = (data[Address::party_pokemon + offset + 42] << 8) | data[Address::party_pokemon + offset + 43];
-
-				//GET POKEMON NICK
-				for (auto j = 0; j < 0xB; j++)
-					party_data[i].raw_name[j] = data[Address::party_names + nick_offset + j];
-				ConvertName(party_data[i].raw_name, party_data[i].name);
-
-				//GET OT
-				for (auto j = 0; j < 0xB; j++)
-					party_data[i].raw_trainer_name[j] = data[Address::party_trainers + nick_offset + j];
-				ConvertName(party_data[i].raw_trainer_name, party_data[i].trainer_name);
+				GetPokemonFromAddress(
+					Address::party_pokemon + offset, 
+					party_data[i], 
+					Address::party_trainers + nick_offset, 
+					Address::party_names + nick_offset
+				);
 			}
 
 			//BAG LOADING
@@ -294,42 +248,12 @@ namespace Gen1
 				{
 					int pk_offset = (0x21 * j) + pokemon_offset + Address::pokemon_box_1;
 					int nick_offset = 0xB * j;
-					box_data[i].data[j].id = data[ pk_offset + 0];
-					box_data[i].data[j].hp = (data[ pk_offset + 1] << 8) | data[ (0x2C * i) + 2];
-					box_data[i].data[j].level = data[ pk_offset + 3];
-					box_data[i].data[j].status_condition = data[ pk_offset + 4];
-					box_data[i].data[j].type1 = (RAW_Pokemon::Type)data[ pk_offset + 5];
-					box_data[i].data[j].type2 = (RAW_Pokemon::Type)data[ pk_offset + 6];
-					box_data[i].data[j].catch_rate = data[ pk_offset + 7];
-					box_data[i].data[j].move1 = data[ pk_offset + 8];
-					box_data[i].data[j].move2 = data[ pk_offset + 9];
-					box_data[i].data[j].move3 = data[ pk_offset + 10];
-					box_data[i].data[j].move4 = data[ pk_offset + 11];
-					box_data[i].data[j].trainer_id = 0x0; //TODO ADD THE CORRECT VALUE
-					box_data[i].data[j].exp_points = data[ pk_offset + 16]; //TODO FIX/ADD MORE BYTES (3 BYTES TOTAL)
-					box_data[i].data[j].evs.hp = (data[ pk_offset + 17] << 8) | data[ pk_offset + 18];
-					box_data[i].data[j].evs.atk = (data[ pk_offset + 19] << 8) | data[ pk_offset + 20];
-					box_data[i].data[j].evs.def = (data[ pk_offset + 21] << 8) | data[ pk_offset + 22];
-					box_data[i].data[j].evs.spd = (data[ pk_offset + 23] << 8) | data[ pk_offset + 24];
-					box_data[i].data[j].evs.spc = (data[ pk_offset + 25] << 8) | data[ pk_offset + 26];
-					box_data[i].data[j].evs.hp_val = data[ pk_offset + 17];
-					box_data[i].data[j].evs.atk_val = data[ pk_offset + 19];
-					box_data[i].data[j].evs.def_val = data[ pk_offset + 21];
-					box_data[i].data[j].evs.spd_val = data[ pk_offset + 23];
-					box_data[i].data[j].evs.spc_val = data[ pk_offset + 25];
-					box_data[i].data[j].ivs.iv = (data[ pk_offset + 28] << 8) | (data[ pk_offset + 27] & 0xFF); //Returning random values with some pokemon????
-					box_data[i].data[j].ivs.spd = (box_data[i].data[j].ivs.iv & 0xF000) >> 12;
-					box_data[i].data[j].ivs.spc = (box_data[i].data[j].ivs.iv & 0x0F00) >> 8;
-					box_data[i].data[j].ivs.atk = (box_data[i].data[j].ivs.iv & 0x00F0) >> 4;
-					box_data[i].data[j].ivs.def = (box_data[i].data[j].ivs.iv & 0x000F);
-					box_data[i].data[j].ivs.hp = ((box_data[i].data[j].ivs.atk & 1) << 3) |
-						((box_data[i].data[j].ivs.def & 1) << 2) |
-						((box_data[i].data[j].ivs.spd & 1) << 1) |
-						((box_data[i].data[j].ivs.spc & 1));
-					box_data[i].data[j].move1_pp = data[ pk_offset + 29];
-					box_data[i].data[j].move2_pp = data[ pk_offset + 30];
-					box_data[i].data[j].move3_pp = data[ pk_offset + 31];
-					box_data[i].data[j].move4_pp = data[ pk_offset + 32];
+					GetPokemonFromAddress(
+						pk_offset,
+						box_data[i].data[j],
+						Address::pokemon_box_1 + offset + 0x2AA + (j * 0xB),
+						Address::pokemon_box_1 + offset + 0x386 + (j * 0xB)
+					);
 				}
 			}
 
@@ -344,42 +268,12 @@ namespace Gen1
 				{
 					int pk_offset = (0x21 * j) + pokemon_offset + Address::pokemon_box_7;
 					int nick_offset = 0xB * j;
-					box_data[i].data[j].id = data[pk_offset + 0];
-					box_data[i].data[j].hp = (data[pk_offset + 1] << 8) | data[(0x2C * i) + 2];
-					box_data[i].data[j].level = data[pk_offset + 3];
-					box_data[i].data[j].status_condition = data[pk_offset + 4];
-					box_data[i].data[j].type1 = (RAW_Pokemon::Type)data[pk_offset + 5];
-					box_data[i].data[j].type2 = (RAW_Pokemon::Type)data[pk_offset + 6];
-					box_data[i].data[j].catch_rate = data[pk_offset + 7];
-					box_data[i].data[j].move1 = data[pk_offset + 8];
-					box_data[i].data[j].move2 = data[pk_offset + 9];
-					box_data[i].data[j].move3 = data[pk_offset + 10];
-					box_data[i].data[j].move4 = data[pk_offset + 11];
-					box_data[i].data[j].trainer_id = 0x0; //TODO ADD THE CORRECT VALUE
-					box_data[i].data[j].exp_points = data[pk_offset + 16]; //TODO FIX/ADD MORE BYTES (3 BYTES TOTAL)
-					box_data[i].data[j].evs.hp = (data[pk_offset + 17] << 8) | data[pk_offset + 18];
-					box_data[i].data[j].evs.atk = (data[pk_offset + 19] << 8) | data[pk_offset + 20];
-					box_data[i].data[j].evs.def = (data[pk_offset + 21] << 8) | data[pk_offset + 22];
-					box_data[i].data[j].evs.spd = (data[pk_offset + 23] << 8) | data[pk_offset + 24];
-					box_data[i].data[j].evs.spc = (data[pk_offset + 25] << 8) | data[pk_offset + 26];
-					box_data[i].data[j].evs.hp_val = data[pk_offset + 17];
-					box_data[i].data[j].evs.atk_val = data[pk_offset + 19];
-					box_data[i].data[j].evs.def_val = data[pk_offset + 21];
-					box_data[i].data[j].evs.spd_val = data[pk_offset + 23];
-					box_data[i].data[j].evs.spc_val = data[pk_offset + 25];
-					box_data[i].data[j].ivs.iv = (data[pk_offset + 28] << 8) | (data[pk_offset + 27] & 0xFF); //Returning random values with some pokemon????
-					box_data[i].data[j].ivs.spd = (box_data[i].data[j].ivs.iv & 0xF000) >> 12;
-					box_data[i].data[j].ivs.spc = (box_data[i].data[j].ivs.iv & 0x0F00) >> 8;
-					box_data[i].data[j].ivs.atk = (box_data[i].data[j].ivs.iv & 0x00F0) >> 4;
-					box_data[i].data[j].ivs.def = (box_data[i].data[j].ivs.iv & 0x000F);
-					box_data[i].data[j].ivs.hp = ((box_data[i].data[j].ivs.atk & 1) << 3) |
-						((box_data[i].data[j].ivs.def & 1) << 2) |
-						((box_data[i].data[j].ivs.spd & 1) << 1) |
-						((box_data[i].data[j].ivs.spc & 1));
-					box_data[i].data[j].move1_pp = data[pk_offset + 29];
-					box_data[i].data[j].move2_pp = data[pk_offset + 30];
-					box_data[i].data[j].move3_pp = data[pk_offset + 31];
-					box_data[i].data[j].move4_pp = data[pk_offset + 32];
+					GetPokemonFromAddress(
+						pk_offset,
+						box_data[i].data[j],
+						Address::pokemon_box_7 + offset + 0x2AA + (j * 0xB),
+						Address::pokemon_box_7 + offset + 0x386 + (j * 0xB)
+					);
 				}
 			}
 
@@ -388,50 +282,70 @@ namespace Gen1
 			for(int i = 0; i < box_data[current_box].size; i++)
 			{
 				int offset = (0x21 * i) + 0x16;
-				box_data[current_box].data[i].id = data[Address::current_box_data + offset + 0];
-				box_data[current_box].data[i].hp = (data[Address::current_box_data + offset + 1] << 8) | data[Address::current_box_data + (0x2C * i) + 2];
-				box_data[current_box].data[i].level = data[Address::current_box_data + offset + 3];
-				box_data[current_box].data[i].status_condition = data[Address::current_box_data + offset + 4];
-				box_data[current_box].data[i].type1 = (RAW_Pokemon::Type)data[Address::current_box_data + offset + 5];
-				box_data[current_box].data[i].type2 = (RAW_Pokemon::Type)data[Address::current_box_data + offset + 6];
-				box_data[current_box].data[i].catch_rate = data[Address::current_box_data + offset + 7];
-				box_data[current_box].data[i].move1 = data[Address::current_box_data + offset + 8];
-				box_data[current_box].data[i].move2 = data[Address::current_box_data + offset + 9];
-				box_data[current_box].data[i].move3 = data[Address::current_box_data + offset + 10];
-				box_data[current_box].data[i].move4 = data[Address::current_box_data + offset + 11];
-				box_data[current_box].data[i].trainer_id = 0x0; //TODO ADD THE CORRECT VALUE
-				box_data[current_box].data[i].exp_points = data[Address::current_box_data + offset + 16]; //TODO FIX/ADD MORE BYTES (3 BYTES TOTAL)
-				box_data[current_box].data[i].evs.hp = (data[Address::current_box_data + offset + 17] << 8) | data[Address::current_box_data + offset + 18];
-				box_data[current_box].data[i].evs.atk = (data[Address::current_box_data + offset + 19] << 8) | data[Address::current_box_data + offset + 20];
-				box_data[current_box].data[i].evs.def = (data[Address::current_box_data + offset + 21] << 8) | data[Address::current_box_data + offset + 22];
-				box_data[current_box].data[i].evs.spd = (data[Address::current_box_data + offset + 23] << 8) | data[Address::current_box_data + offset + 24];
-				box_data[current_box].data[i].evs.spc = (data[Address::current_box_data + offset + 25] << 8) | data[Address::current_box_data + offset + 26];
-				box_data[current_box].data[i].evs.hp_val = data[Address::current_box_data + offset + 17];
-				box_data[current_box].data[i].evs.atk_val = data[Address::current_box_data + offset + 19];
-				box_data[current_box].data[i].evs.def_val = data[Address::current_box_data + offset + 21];
-				box_data[current_box].data[i].evs.spd_val = data[Address::current_box_data + offset + 23];
-				box_data[current_box].data[i].evs.spc_val = data[Address::current_box_data + offset + 25];
-				box_data[current_box].data[i].ivs.iv = (data[Address::current_box_data + offset + 28] << 8) | (data[Address::current_box_data + offset + 27] & 0xFF); //Returning random values with some pokemon????
-				box_data[current_box].data[i].ivs.spd = (box_data[current_box].data[i].ivs.iv & 0xF000) >> 12;
-				box_data[current_box].data[i].ivs.spc = (box_data[current_box].data[i].ivs.iv & 0x0F00) >> 8;
-				box_data[current_box].data[i].ivs.atk = (box_data[current_box].data[i].ivs.iv & 0x00F0) >> 4;
-				box_data[current_box].data[i].ivs.def = (box_data[current_box].data[i].ivs.iv & 0x000F);
-				box_data[current_box].data[i].ivs.hp = ((box_data[current_box].data[i].ivs.atk & 1) << 3) |
-					((box_data[current_box].data[i].ivs.def & 1) << 2) |
-					((box_data[current_box].data[i].ivs.spd & 1) << 1) |
-					((box_data[current_box].data[i].ivs.spc & 1));
-				box_data[current_box].data[i].move1_pp = data[Address::current_box_data + offset + 29];
-				box_data[current_box].data[i].move2_pp = data[Address::current_box_data + offset + 30];
-				box_data[current_box].data[i].move3_pp = data[Address::current_box_data + offset + 31];
-				box_data[current_box].data[i].move4_pp = data[Address::current_box_data + offset + 32];
-				box_data[current_box].data[i].level = data[Address::current_box_data + offset + 33];
-				box_data[current_box].data[i].hp = (data[Address::current_box_data + offset + 34] << 8) | data[Address::current_box_data + offset + 35];
-				box_data[current_box].data[i].atk = (data[Address::current_box_data + offset + 36] << 8) | data[Address::current_box_data + offset + 37];
-				box_data[current_box].data[i].def = (data[Address::current_box_data + offset + 38] << 8) | data[Address::current_box_data + offset + 39];
-				box_data[current_box].data[i].spd = (data[Address::current_box_data + offset + 40] << 8) | data[Address::current_box_data + offset + 41];
-				box_data[current_box].data[i].spc = (data[Address::current_box_data + offset + 42] << 8) | data[Address::current_box_data + offset + 43];
+				GetPokemonFromAddress(
+					Address::current_box_data + offset,
+					box_data[current_box].data[i],
+					Address::current_box_data + 0x2AA + (i * 0xB),
+					Address::current_box_data + 0x386 + (i * 0xB)
+				);
 			}
 		}
+
+		void GetPokemonFromAddress(int address, RAW_Pokemon &p, int ot_addr, int name_addr)
+		{
+			p.id = data[address + 0];
+			p.hp = (data[address + 1] << 8) | data[address + 2];
+			p.level = data[address + 3];
+			p.status_condition = data[address + 4];
+			p.type1 = (RAW_Pokemon::Type)data[address + 5];
+			p.type2 = (RAW_Pokemon::Type)data[address + 6];
+			p.catch_rate = data[address + 7];
+			p.move1 = data[address + 8];
+			p.move2 = data[address + 9];
+			p.move3 = data[address + 10];
+			p.move4 = data[address + 11];
+			p.trainer_id = 0x0; //TODO ADD THE CORRECT VALUE
+			p.exp_points = data[address + 16]; //TODO FIX/ADD MORE BYTES (3 BYTES TOTAL)
+			p.evs.hp = (data[address + 17] << 8) | data[address + 18];
+			p.evs.atk = (data[address + 19] << 8) | data[address + 20];
+			p.evs.def = (data[address + 21] << 8) | data[address + 22];
+			p.evs.spd = (data[address + 23] << 8) | data[address + 24];
+			p.evs.spc = (data[address + 25] << 8) | data[address + 26];
+			p.evs.hp_val = data[address + 17];
+			p.evs.atk_val = data[address + 19];
+			p.evs.def_val = data[address + 21];
+			p.evs.spd_val = data[address + 23];
+			p.evs.spc_val = data[address + 25];
+			p.ivs.iv = (data[address + 28] << 8) | (data[address + 27] & 0xFF); //Returning random values with some pokemon????
+			p.ivs.spd = (p.ivs.iv & 0xF000) >> 12;
+			p.ivs.spc = (p.ivs.iv & 0x0F00) >> 8;
+			p.ivs.atk = (p.ivs.iv & 0x00F0) >> 4;
+			p.ivs.def = (p.ivs.iv & 0x000F);
+			p.ivs.hp = ((p.ivs.atk & 1) << 3) |
+				((p.ivs.def & 1) << 2) |
+				((p.ivs.spd & 1) << 1) |
+				((p.ivs.spc & 1));
+			p.move1_pp = data[address + 29];
+			p.move2_pp = data[address + 30];
+			p.move3_pp = data[address + 31];
+			p.move4_pp = data[address + 32];
+			p.level = data[address + 33];
+			p.hp = (data[address + 34] << 8) | data[address + 35];
+			p.atk = (data[address + 36] << 8) | data[address + 37];
+			p.def = (data[address + 38] << 8) | data[address + 39];
+			p.spd = (data[address + 40] << 8) | data[address + 41];
+			p.spc = (data[address + 42] << 8) | data[address + 43];
+
+			for (auto j = 0; j < 0xB; j++)
+				p.raw_name[j] = data[name_addr + j];
+			ConvertName(p.raw_name, p.name);
+
+			//GET OT
+			for (auto j = 0; j < 0xB; j++)
+				p.raw_trainer_name[j] = data[ot_addr + j];
+			ConvertName(p.raw_trainer_name, p.trainer_name);
+		}
+		
 		static void ConvertName(char* name, char* result)
 		{
 			for (auto i = 0; i < 0xB; i++)

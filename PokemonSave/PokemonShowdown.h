@@ -20,11 +20,18 @@ namespace Gen1
 				output_text += "Ability: none\n";
 				output_text += "Level: " + std::to_string(sf.party_data[i].level) + "\n";
 				output_text += "EVs: " +
-					std::to_string(sf.party_data[i].evs.hp_val)  + " HP / " +
-					std::to_string(sf.party_data[i].evs.atk_val) + " Atk / " +
-					std::to_string(sf.party_data[i].evs.def_val) + " Def / " +
-					std::to_string(sf.party_data[i].evs.spc_val) + " SpA / " +
-					std::to_string(sf.party_data[i].evs.spd_val) + " Spe " + "\n";
+					std::to_string(sf.party_data[i].evs.hp_val + 1)  + " HP / " +
+					std::to_string(sf.party_data[i].evs.atk_val + 1) + " Atk / " +
+					std::to_string(sf.party_data[i].evs.def_val + 1) + " Def / " +
+					std::to_string(sf.party_data[i].evs.spc_val + 1) + " SpA / " +
+					std::to_string(sf.party_data[i].evs.spd_val + 1) + " Spe " + "\n";
+
+				output_text += "IVs: " +
+					std::to_string(sf.party_data[i].ivs.hp * 2) + " HP / " +
+					std::to_string(sf.party_data[i].ivs.atk * 2) + " Atk / " +
+					std::to_string(sf.party_data[i].ivs.def * 2) + " Def / " +
+					std::to_string(sf.party_data[i].ivs.spc * 2) + " SpA / " +
+					std::to_string(sf.party_data[i].ivs.spd * 2) + " Spe " + "\n";
 
 				//TODO: ADD IVs
 

@@ -53,7 +53,15 @@ void Gen1::SaveFile::ProcessData()
 		party_data[i].evs.def_val =			data[Address::party_pokemon + offset + 21];
 		party_data[i].evs.spd_val =			data[Address::party_pokemon + offset + 23];
 		party_data[i].evs.spc_val =			data[Address::party_pokemon + offset + 25];
-		party_data[i].evs.iv;				//TODO ADD THE CORRECT VALUE (2 BYTES)
+		party_data[i].ivs.iv =				(data[Address::party_pokemon + offset + 28] << 8) | (data[Address::party_pokemon + offset + 27] & 0xFF); //Returning random values with some pokemon????
+		party_data[i].ivs.spd =				(party_data[i].ivs.iv & 0xF000) >> 12;
+		party_data[i].ivs.spc =				(party_data[i].ivs.iv & 0x0F00) >> 8;
+		party_data[i].ivs.atk =				(party_data[i].ivs.iv & 0x00F0) >> 4;
+		party_data[i].ivs.def =				(party_data[i].ivs.iv & 0x000F);
+		party_data[i].ivs.hp =				((party_data[i].ivs.atk & 1) << 3) |
+											((party_data[i].ivs.def & 1) << 2) |
+											((party_data[i].ivs.spd & 1) << 1) |
+											((party_data[i].ivs.spc & 1));
 		party_data[i].move1_pp =			data[Address::party_pokemon + offset + 29];
 		party_data[i].move2_pp =			data[Address::party_pokemon + offset + 30];
 		party_data[i].move3_pp =			data[Address::party_pokemon + offset + 31];

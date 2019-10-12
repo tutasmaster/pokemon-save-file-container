@@ -21,5 +21,6 @@ int main()
 		std::cout << "\t\tTYPE 2: " << std::hex << Gen1::Pokemon_List[sf.party_data[i].id].type2 << "\n";
 		std::cout << "\n";
 	}
+	Gen1::ShowdownGenerator sg(sf);
 	return 0;
 }

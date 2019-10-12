@@ -6,6 +6,7 @@
 #include <vector>
 #include <string>
 #include "Gen1Moves.h"
+#include "Gen1Items.h"
 
 
 

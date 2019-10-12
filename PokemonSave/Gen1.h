@@ -305,7 +305,7 @@ namespace Gen1
 			p.move3 = data[address + 10];
 			p.move4 = data[address + 11];
 			p.trainer_id = 0x0; //TODO ADD THE CORRECT VALUE
-			p.exp_points = data[address + 16]; //TODO FIX/ADD MORE BYTES (3 BYTES TOTAL)
+			p.exp_points = (data[address + 16] << 16) | (data[address + 15] << 8) | data[address + 14];
 			p.evs.hp = (data[address + 17] << 8) | data[address + 18];
 			p.evs.atk = (data[address + 19] << 8) | data[address + 20];
 			p.evs.def = (data[address + 21] << 8) | data[address + 22];
@@ -329,7 +329,7 @@ namespace Gen1
 			p.move2_pp = data[address + 30];
 			p.move3_pp = data[address + 31];
 			p.move4_pp = data[address + 32];
-			p.level = data[address + 33];
+			//p.level = data[address + 33];
 			p.hp = (data[address + 34] << 8) | data[address + 35];
 			p.atk = (data[address + 36] << 8) | data[address + 37];
 			p.def = (data[address + 38] << 8) | data[address + 39];
@@ -344,6 +344,19 @@ namespace Gen1
 			for (auto j = 0; j < 0xB; j++)
 				p.raw_trainer_name[j] = data[ot_addr + j];
 			ConvertName(p.raw_trainer_name, p.trainer_name);
+
+			CalculateStats(p);
+		}
+
+		void CalculateStats(RAW_Pokemon &p)
+		{
+			Pokemon curPokemon = Pokemon_List[p.id];
+
+			p.hp = ((((curPokemon.hp + p.ivs.hp) * 2 + (sqrt(p.evs.hp) / 4)) * p.level) / 100) + p.level + 10;
+			p.atk = ((((curPokemon.atk + p.ivs.atk) * 2 + (sqrt(p.evs.atk) / 4)) * p.level) / 100) + 5;
+			p.def = ((((curPokemon.def + p.ivs.def) * 2 + (sqrt(p.evs.def) / 4)) * p.level) / 100) + 5;
+			p.spc = ((((curPokemon.spc + p.ivs.spc) * 2 + (sqrt(p.evs.spc) / 4)) * p.level) / 100) + 5;
+			p.spd = ((((curPokemon.spd + p.ivs.spd) * 2 + (sqrt(p.evs.spd) / 4)) * p.level) / 100) + 5;
 		}
 		
 		static void ConvertName(char* name, char* result)

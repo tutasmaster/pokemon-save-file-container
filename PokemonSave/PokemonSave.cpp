@@ -20,6 +20,11 @@ int main()
 		std::cout << "\tOT: " << sf.party_data[i].trainer_name << "\n";
 		std::cout << "\tTYPE 1: " << std::hex << Gen1::Pokemon_List[sf.party_data[i].id].type1 << "\n";
 		std::cout << "\tTYPE 2: " << std::hex << Gen1::Pokemon_List[sf.party_data[i].id].type2 << "\n";
+		std::cout << "\tHP: " << std::dec << (int)sf.party_data[i].hp << "\n";
+		std::cout << "\tATK: " << std::dec << (int)sf.party_data[i].atk << "\n";
+		std::cout << "\tDEF: " << std::dec << (int)sf.party_data[i].def << "\n";
+		std::cout << "\tSPC: " << std::dec << (int)sf.party_data[i].spc << "\n";
+		std::cout << "\tSPD: " << std::dec << (int)sf.party_data[i].spd << "\n";
 		std::cout << "\n";
 	}
 	std::cout << "BAG_DATA:\n";
@@ -36,7 +41,12 @@ int main()
 		std::cout << "\tBOX " << std::dec << (int)i << "\n";
 		for(auto j = 0; j < sf.box_data[i].size; j++){
 			std::cout << "\t\tNAME: " << Gen1::Pokemon_List[sf.box_data[i].data[j].id].name << "\n";
-			std::cout << "\t\tNICK: " << sf.box_data[i].data[j].name<< "\n";
+			std::cout << "\t\tNICK: " << sf.box_data[i].data[j].name << "\n";
+			std::cout << "\t\tHP: " << std::dec << (int) sf.box_data[i].data[j].hp << "\n";
+			std::cout << "\t\tATK: " << std::dec << (int)sf.box_data[i].data[j].atk << "\n";
+			std::cout << "\t\tDEF: " << std::dec << (int)sf.box_data[i].data[j].def << "\n";
+			std::cout << "\t\tSPC: " << std::dec << (int)sf.box_data[i].data[j].spc << "\n";
+			std::cout << "\t\tSPD: " << std::dec << (int)sf.box_data[i].data[j].spd << "\n";
 		}
 	}
 	Gen1::ShowdownGenerator sg(sf);

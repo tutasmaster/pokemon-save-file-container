@@ -79,6 +79,12 @@ namespace Gen1
 		static const int pokemon_box_7 = 0x6000;
 		static const int current_box = 0x284C;
 		static const int current_box_data = 0x30C0;
+		static const int badges = 0x2602;
+		static const int pikachu_friendship = 0x29E6;
+		static const int rival_starter = 0x29C1;
+		static const int player_starter = 0x29C3;
+		static const int pokedex_owned = 0x25A3;
+		static const int pokedex_seen = 0x25B6;
 	};
 	
 	struct RAW_Pokemon
@@ -153,11 +159,29 @@ namespace Gen1
 	public:
 		struct PlayerData
 		{
+			enum Badges
+			{
+				Boulder_Badge,
+				Cascade_Badge,
+				Thunder_Badge,
+				Rainbow_Badge,
+				Soul_Badge,
+				Marsh_Badge,
+				Volcano_Badge,
+				Earth_Badge
+			};
+			
 			char raw_name[12] = "";
 			char name[12] = "";
 			int  money = 0;
 			char raw_rival_name[12] = "";
 			char rival_name[12] = "";
+
+			std::array<bool, 8> badges; //Boulder, Cascade, Thunder, Rainbow, Soul, Marsh, Volcano, Earth
+
+			uint8_t pikachu_friendship = 0x0; //POKEMON_YELLOW ONLY
+			uint8_t player_starter = 0x0;
+			uint8_t rival_starter = 0x0;
 		}player_data;
 
 		struct Item_Box
@@ -180,6 +204,9 @@ namespace Gen1
 
 		std::array<Pokemon_Box, 12> box_data;
 		uint8_t current_box = 0;
+
+		std::array<bool, 152> pokedex_seen;
+		std::array<bool, 152> pokedex_owned;
 
 		void ProcessData()
 		{
@@ -289,6 +316,25 @@ namespace Gen1
 					Address::current_box_data + 0x386 + (i * 0xB)
 				);
 			}
+
+			//LOADING POKEDEX
+			for(auto i = 0; i < 256; i++)
+			{
+				uint32_t n = Pokemon_List[i].national_dex & 0xFF;
+				if (n == 0)
+					continue;
+
+				pokedex_owned[n] = (data[Address::pokedex_owned + (n >> 3)] & 1) >> (n & 0b111) & 1;
+				pokedex_seen[n] = (data[Address::pokedex_seen + (n >> 3)] & 1) >> (n & 0b111) & 1;
+			}
+			
+			for (auto i = 0; i < 8; i++) //LOADING BADGES
+				player_data.badges[i] = (data[Address::badges] >> (7 - i)) & 0x1;
+			player_data.pikachu_friendship = data[Address::pikachu_friendship]; //LOADING FRIENDSHIP
+			//LOADING STARTERS
+			player_data.player_starter = data[Address::player_starter];
+			player_data.rival_starter = data[Address::rival_starter];
+			
 		}
 
 		void GetPokemonFromAddress(int address, RAW_Pokemon &p, int ot_addr, int name_addr)
